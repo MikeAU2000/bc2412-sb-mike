@@ -21,8 +21,4 @@ public class HelloworldConstroller {
     strlist.add("h");
     return strlist;
   }
-
-  
-  
-  
 }

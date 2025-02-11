@@ -1,6 +1,7 @@
 package com.sb2.demo_restful.controller;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,16 +12,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import com.sb2.demo_restful.Service.CatService;
 import com.sb2.demo_restful.model.Cat;
 import com.sb2.demo_restful.model.CatDatabase;
 
-@Controller
-@ResponseBody
+@RestController
 public class CatController {
+  @Autowired
+  private CatService catService;
   // insert
   @PostMapping(value = "/cat")
   public Cat createCat(@RequestBody Cat cat) {
-    if (CatDatabase.put(cat))
+    if (this.catService.put(cat))
       return cat;
     return null;
   }

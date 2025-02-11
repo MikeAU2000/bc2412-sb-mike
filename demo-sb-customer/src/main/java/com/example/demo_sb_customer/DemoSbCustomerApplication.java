@@ -1,13 +1,13 @@
-package com.sb2.demo_restful;
+package com.example.demo_sb_customer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication 
-public class DemoRestfulApplication {
+@SpringBootApplication
+public class DemoSbCustomerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoRestfulApplication.class, args);
+		SpringApplication.run(DemoSbCustomerApplication.class, args);
 	}
 
 }

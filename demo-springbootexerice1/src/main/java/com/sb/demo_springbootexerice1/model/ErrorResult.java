@@ -1,5 +1,4 @@
-package com.sb2.demo_restful.model;
-
+package com.sb.demo_springbootexerice1.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
