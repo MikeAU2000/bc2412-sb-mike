@@ -2,6 +2,7 @@ package com.example.demo_sb_customer.codewave;
 
 public class BusinessException extends RuntimeException{
   private Syscode syscode;
+  
   public static BusinessException of(Syscode syscode){
     return new BusinessException(syscode);
   }

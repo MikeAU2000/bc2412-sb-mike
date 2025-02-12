@@ -2,12 +2,16 @@ package com.example.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
   private Long id;
   private String name;
@@ -17,6 +21,7 @@ public class UserDTO {
 
   @Getter
   @Setter
+  @Builder
   @AllArgsConstructor
   public static class Address {
     private String street;
@@ -27,6 +32,7 @@ public class UserDTO {
 
     @Getter
     @Setter
+    @Builder
     @AllArgsConstructor
     public static class Geo {
       @JsonProperty(value = "x")

@@ -4,10 +4,17 @@ server:
 spring.datasource:
   driverClassName: "org.postgresql.Driver"
   url: "jdbc:postgresql://localhost:5432/bc2412"
-  username: "postgres" 
+  username: "postgres"
   password: "admin1234"
-
+  
 spring.jpa:
-  show-sql: true 
+  show-sql: true
   hibernate.ddl-auto: update
+
+# Custom Variables
+api:
+  jsonplaceholder:
+    domain: "jsonplaceholder.typicode.com"
+    endpoints:
+      users: "/users"
 

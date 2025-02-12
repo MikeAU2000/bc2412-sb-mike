@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo_sb_customer.controller.UserOperation;
 import com.example.demo_sb_customer.service.UserService;
 import com.example.dto.UserDTO;
+import com.example.dto.mapper.UserDTOMapper;
 
 
 @RestController
@@ -14,17 +15,12 @@ public class UserController implements UserOperation{
   @Autowired
   private UserService userService;
 
+  @Autowired
+  private UserDTOMapper userDTOMapper;
+
   public List<UserDTO> getUsers() {
     return this.userService.getUsers().stream()
-        .map(e -> new UserDTO(e.getId(), e.getName(), e.getUsername(),
-            e.getEmail(),
-            new UserDTO.Address(e.getAddress().getStreet(),
-                e.getAddress().getSuite(), e.getAddress().getCity(),
-                e.getAddress().getZipcode(),
-                new UserDTO.Address.Geo(e.getAddress().getGeo().getLatitude(),
-                    e.getAddress().getGeo().getLongitude()))))
-
-
+        .map(e -> this.userDTOMapper.map(e))
         .collect(Collectors.toList());
   }
 
