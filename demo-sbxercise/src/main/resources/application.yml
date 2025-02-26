@@ -3,11 +3,18 @@ server:
 
 spring.datasource:
   driverClassName: "org.postgresql.Driver"
-  url: "jdbc:postgresql://localhost:5432/bc2412"
+  url: "jdbc:postgresql://localhost:5432/exercise3"
   username: "postgres"
   password: "admin1234"
   
 spring.jpa:
   show-sql: true
   hibernate.ddl-auto: update
+
+api:
+  base-url: https://jsonplaceholder.typicode.com
+  endpoints:
+    users: /users
+    posts: /posts
+    comments: /comments
 

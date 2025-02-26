@@ -13,6 +13,14 @@ public class GlobalExceptionHandler {
       .build();
   }
 
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ApiResp<Void> MethodArgumentTypeMismatchException(IllegalArgumentException e){
+    return ApiResp.<Void>builder()
+      .syscode(SysCode.INVALID_INPUT)
+      .build();
+  }
+
   @ExceptionHandler(HttpClientErrorException.class)
   public ApiResp<Void> handleBusinessException(){
     return ApiResp.<Void>builder()
