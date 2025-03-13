@@ -1,10 +1,7 @@
 {
-	"folders": [
-		{
-			"path": "/Users/mikeau/Documents/bootcamp/bc2412-sb-mike/demo-sbxercise"
-		}
-	],
-	"settings": {
-		"java.compile.nullAnalysis.mode": "automatic"
-	}
+  "folders": [
+    {
+      "path": "demo-final-project/src/main/java/com/example/demo_final_project"
+    }
+  ]
 }

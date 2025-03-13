@@ -1,0 +1,10 @@
+server:
+  port: 8100
+
+api:
+  yahooFinance:
+    domain: "https://query1.finance.yahoo.com"
+    endpoints:
+      ky: "/v1/test/getcrumb"
+      data: "/v7/finance/quote?symbols="
+      crumb: "&crumb="

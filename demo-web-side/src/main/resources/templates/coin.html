@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Cryptocurrency Market</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: separate;  /* 改为separate以支持行间距 */
+            border-spacing: 0 0.75em;   /* 增加行间距，0是左右间距，0.75em是上下间距 */
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            width: 30px;
+            height: 30px;
+        }
+        .positive {
+            color: #00873c;  /* 深绿色 */
+            background-color: #e6f4ea;  /* 浅绿色背景 */
+        }
+        .negative {
+            color: #d93025;  /* 深红色 */
+            background-color: #fce8e6;  /* 浅红色背景 */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Cryptocurrency Market Data</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Logo</th>
+                <th>Name</th>
+                <th>Symbol</th>
+                <th>Price (USD)</th>
+                <th>24h Change</th>
+                <th>Market Cap</th>
+                <th>Last Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="crypto : ${coin}" 
+                th:class="${crypto.priceChangePercentage24h >= 0 ? 'positive' : 'negative'}">
+                <td><img th:src="${crypto.image}" th:alt="${crypto.name}"></td>
+                <td th:text="${crypto.name}"></td>
+                <td th:text="${crypto.symbol}"></td>
+                <td th:text="${#numbers.formatDecimal(crypto.currentPrice, 1, 2)}"></td>
+                <td th:text="${#numbers.formatDecimal(crypto.priceChangePercentage24h, 1, 2) + '%'}"></td>
+                <td th:text="${#numbers.formatDecimal(crypto.marketCap, 1, 0)}"></td>
+                <td th:text="${crypto.lastUpdated}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

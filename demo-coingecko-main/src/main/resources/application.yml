@@ -1,0 +1,20 @@
+server:
+  port: 8085
+
+api:
+  coingecko:
+    coin-market:
+      url:
+        base: "https://api.coingecko.com"
+        version: "api/v3"
+        coinsMarketsEndpoint: "/coins/markets"  # 修改这里
+      param:
+        vs_currency: "usd"                      # 修改命名格式
+        order: "market_cap_desc"
+        ids: ""                                 # 可以为空
+        per_page: 100                           # 修改命名格式
+        page: 1
+        sparkline: false
+        price_change_percentage: "1h"           # 修改命名格式
+      return:
+        no-of-items: 20

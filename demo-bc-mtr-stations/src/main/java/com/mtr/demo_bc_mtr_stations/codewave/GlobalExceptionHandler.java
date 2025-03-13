@@ -1,9 +1,11 @@
 package com.mtr.demo_bc_mtr_stations.codewave;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 
 //IllegalArgumentException
+@RestControllerAdvice
 public class GlobalExceptionHandler {
   @ExceptionHandler(IllegalArgumentException.class)
   public ApiResp<Void> handleIllegalArgumentException(IllegalArgumentException i){
