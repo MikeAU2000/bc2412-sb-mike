@@ -12,6 +12,7 @@ import com.example.project.demo_bc_xfin_service.entity.TstocksEntity;
 import com.example.project.demo_bc_xfin_service.entity.TstocksPriceEntity;
 import com.example.project.demo_bc_xfin_service.manager.YahooFinanceAPI;
 import com.example.project.demo_bc_xfin_service.manager.YahooService;
+import com.example.project.demo_bc_xfin_service.model.DTO.StockChartDTO;
 import com.example.project.demo_bc_xfin_service.service.StockServiceimpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
-
-
 @RestController
 public class Operation {
   @Autowired
@@ -30,6 +29,7 @@ public class Operation {
 
   @Autowired
   private StockServiceimpl stockServiceimpl;
+
 
 
   @GetMapping("/cookies")
@@ -44,7 +44,7 @@ public class Operation {
     return stockServiceimpl.getYahooData(num);
   }
 
-  @PostMapping("/stock")
+  @PostMapping("/stock/{symbols}")
   public TstocksEntity postMethodName(@PathVariable("symbols") String sym) throws JsonProcessingException {
       return stockServiceimpl.saveStock(sym);
   }
@@ -67,6 +67,18 @@ public class Operation {
   public List<TstocksPriceEntity> getDayPrice(@RequestParam (value = "number") String num) throws JsonProcessingException {
       return stockServiceimpl.getRedisData(num);
   }
+
+  @CrossOrigin
+  @GetMapping("/StockChartDtoredisdata")
+  public List<StockChartDTO> getDto(@RequestParam (value = "symbols") String sym) throws JsonProcessingException {
+      return stockServiceimpl.getStockChartDTORedis(sym);
+  }
+
+  @GetMapping("/StockListDto") 
+  public List<StockChartDTO> getLast5Entity(@RequestParam (value = "symbols") String sym, @RequestParam (value = "time") LocalDate data) throws JsonProcessingException {
+      return stockServiceimpl.getStockChartDTO(sym, data);
+  }
+  
 
 
 }

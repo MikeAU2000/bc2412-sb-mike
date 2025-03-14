@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class YahooFinanceAPI {
     private static final String BASE_URL = "https://query1.finance.yahoo.com/v1/test/getcrumb";
@@ -27,36 +28,44 @@ public class YahooFinanceAPI {
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
     public static void main(String[] args) {
-        try {
-            String crumb = getNewCrumb3();
-            System.out.println("Crumb: " + crumb);
-            String crumb1 = getNewCrumb3();
-            System.out.println("Crumb: " + crumb1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     String crumb = getNewCrumb3();
+        //     System.out.println("Crumb: " + crumb);
+        //     String crumb1 = getNewCrumb3();
+        //     System.out.println("Crumb: " + crumb1);
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // } 
         // 时间戳（单位：秒）
-        long timestamp = 1741745188L;
+        long timestamp = 1741938242L;
 
-        // 将时间戳转换为 Instant 对象
         Instant instant = Instant.ofEpochSecond(timestamp);
 
-        // 指定香港时区
         ZoneId zoneId = ZoneId.of("Asia/Hong_Kong");
 
-        // 将 Instant 转换为香港时区的 LocalDateTime
         LocalDateTime dateTime = LocalDateTime.ofInstant(instant, zoneId);
 
-        // 定义日期时间格式
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        // 格式化日期时间
-        //String formattedDateTime = dateTime.format(formatter);
+        String formattedDateTime = dateTime.format(formatter);
 
-        // 输出结果
-        //System.out.println("香港时间：" + formattedDateTime);
+        System.out.println("香港时间：" + formattedDateTime);
         
         System.out.println(dateTime);
+        ZoneId zone = ZoneId.of("Asia/Hong_Kong");
+        
+        // 計算 2025-03-14 00:00:00 的 Unix 時間
+        LocalDateTime startDateTime = LocalDateTime.of(2025, 3, 14, 0, 0, 0);
+        long startUnixTime = startDateTime.atZone(zone).toEpochSecond();
+        
+        // 計算 2025-03-14 23:59:59 的 Unix 時間
+        LocalDateTime endDateTime = LocalDateTime.of(2025, 3, 14, 23, 59, 59);
+        long endUnixTime = endDateTime.atZone(zone).toEpochSecond();
+        
+        // 輸出結果
+        System.out.println("Unix Timestamp for 2025-03-17 00:00:00: " + startUnixTime);
+        System.out.println("Unix Timestamp for 2025-03-13 23:59:59: " + endUnixTime);
+    
     }
 
     public static String getNewCrumb() throws IOException {

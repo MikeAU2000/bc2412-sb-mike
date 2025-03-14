@@ -1,5 +1,7 @@
 package com.example.project.demo_bc_xfin_service.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -19,6 +21,7 @@ import com.example.project.demo_bc_xfin_service.entity.TstocksPriceEntity;
 import com.example.project.demo_bc_xfin_service.manager.CrubManager;
 import com.example.project.demo_bc_xfin_service.manager.YahooFinanceManager;
 import com.example.project.demo_bc_xfin_service.manager.YahooService;
+import com.example.project.demo_bc_xfin_service.model.DTO.StockChartDTO;
 import com.example.project.demo_bc_xfin_service.repository.TstocksPriceRepository;
 import com.example.project.demo_bc_xfin_service.repository.TstocksRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -76,9 +79,10 @@ public class StockServiceimpl {
     QuoteResponseDto.Result quoteResponseDto =
         getYahooData(symbol).getQuoteResponse().getResult().get(0);
     TstocksPriceEntity stockPrice = new TstocksPriceEntity();
-    if(quoteResponseDto.getMarketState().equals("PRE")){
-      this.redisManager.delete(symbol);
-    }
+    //if(quoteResponseDto.getMarketState().equals("PREPRE") || quoteResponseDto.getMarketState().equals("PRE")){
+      //this.redisManager.delete(symbol);
+      //this.redisManager.delete("StockChartDTO-"+symbol);
+    //}
     if (!(quoteResponseDto.getMarketState().equals("REGULAR"))) {
       return stockPrice;
     }
@@ -144,4 +148,60 @@ public class StockServiceimpl {
       this.redisManager.set("stocks", stockSymbols);
     return tstocksRepository.save(tstocksEntity);
   }
+
+  public List<TstocksPriceEntity> getTop5(String symbol, Long dateTime){
+    return tstocksPriceRepository.findTop5BySymbolAndRegularMarketTimeBeforeOrderByRegularMarketTimeDesc(symbol,dateTime);
+  }
+
+  public Double get5Sma(String symbol, Long dateTime){
+    List<TstocksPriceEntity> lastTop5Entity= tstocksPriceRepository.findTop5BySymbolAndRegularMarketTimeBeforeOrderByRegularMarketTimeDesc(symbol,dateTime);
+    if (lastTop5Entity == null || lastTop5Entity.isEmpty()) {
+      return 0.0;
+  }
+  
+  BigDecimal sma5 = BigDecimal.ZERO;
+
+  for (TstocksPriceEntity tstocksPriceEntity : lastTop5Entity) {
+      if (tstocksPriceEntity.getRegularMarketPrice() != null) {
+          sma5 = sma5.add(BigDecimal.valueOf(tstocksPriceEntity.getRegularMarketPrice()));
+      }
+  }
+  
+  return sma5.divide(BigDecimal.valueOf(5), 2, RoundingMode.HALF_UP).doubleValue();  
+  
+  }
+
+  public List<StockChartDTO> getStockChartDTORedis(String symbol) throws JsonProcessingException{
+    List<StockChartDTO> stockChartDTOs= new ArrayList<>();
+    StockChartDTO[] redisData=this.redisManager.get("StockChartDTO-"+symbol, StockChartDTO[].class);
+    if(redisData != null){
+      return Arrays.asList(redisData);
+    }
+    return stockChartDTOs;
+  }
+
+  public List<StockChartDTO> getStockChartDTO(String symbol, LocalDate data) throws JsonProcessingException {
+    LocalDateTime startOfDay = data.atStartOfDay();
+    LocalDateTime endOfDay = data.atTime(23, 59, 59);
+
+    List<TstocksPriceEntity> priceList = tstocksPriceRepository.findAllBySymbolAndApiDateTimeBetween(symbol, startOfDay, endOfDay);
+
+    return priceList.stream().map(entity -> StockChartDTO.builder()
+            .id(entity.getId())
+            .symbol(entity.getSymbol())
+            .regularMarketTime(entity.getRegularMarketTime())
+            .regularMarketPrice(entity.getRegularMarketPrice())
+            .regularMarketChangePercent(entity.getRegularMarketChangePercent())
+            .bid(entity.getBid())
+            .bidSize(entity.getBidSize())
+            .ask(entity.getAsk())
+            .askSize(entity.getAskSize())
+            .type(entity.getType())
+            .apiDateTime(entity.getApiDateTime())
+            .marketUnixTime(entity.getMarketUnixTime())
+            .smaFivePrice(get5Sma(entity.getSymbol(), entity.getRegularMarketTime())) // 计算 smaFivePrice
+            .build()
+    ).toList();
+  }
+
 }
