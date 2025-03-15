@@ -1,0 +1,26 @@
+server:
+  port: 8100
+
+spring.datasource:
+  driverClassName: "org.postgresql.Driver"
+  url: "jdbc:postgresql://localhost:5432/stockDB"
+  username: "postgres"
+  password: "admin1234"
+  
+spring.jpa:
+  show-sql: true
+  hibernate.ddl-auto: update
+
+spring:
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+
+api:
+  yahooFinance:
+    domain: "https://query1.finance.yahoo.com"
+    endpoints:
+      ky: "/v1/test/getcrumb"
+      data: "/v7/finance/quote?symbols="
+      crumb: "&crumb="

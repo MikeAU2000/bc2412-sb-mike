@@ -1,0 +1,86 @@
+package com.example.project.demo_bc_xfin_service.controller;
+
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+import com.example.project.demo_bc_xfin_service.dto.QuoteResponseDto;
+import com.example.project.demo_bc_xfin_service.entity.fiveMinsEntity.TstocksEntity;
+import com.example.project.demo_bc_xfin_service.entity.fiveMinsEntity.TstocksPriceEntity;
+import com.example.project.demo_bc_xfin_service.manager.yfManager.YahooFinanceAPI;
+import com.example.project.demo_bc_xfin_service.manager.yfManager.YahooService;
+import com.example.project.demo_bc_xfin_service.model.DTO.StockChartDTO;
+import com.example.project.demo_bc_xfin_service.service.fiveMinxService.StockServiceimpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+
+
+@RestController
+public class Operation {
+  @Autowired
+  private YahooService yahooService;
+
+  @Autowired
+  private StockServiceimpl stockServiceimpl;
+
+
+
+  @GetMapping("/cookies")
+  public String getCookies() throws IOException {
+    System.out.println(yahooService.getYahooCookies());
+    return YahooFinanceAPI.getNewCrumb();
+  }
+
+  @GetMapping("/json")
+  public QuoteResponseDto getMethodName(
+      @RequestParam(value = "number") String num) {
+    return stockServiceimpl.getYahooData(num);
+  }
+
+  @PostMapping("/stock/{symbols}")
+  public TstocksEntity postMethodName(@PathVariable("symbols") String sym) throws JsonProcessingException {
+      return stockServiceimpl.saveStock(sym);
+  }
+  
+
+  @GetMapping("/stocklist")
+  public Map<String, List<String>> getStockList()
+      throws JsonProcessingException {
+    return stockServiceimpl.getStockList();
+  }
+
+  @GetMapping("/dayprice")
+  public List<TstocksPriceEntity> getDayPrice(@RequestParam (value = "number") String num,
+  @RequestParam (value = "day") LocalDate day) throws JsonProcessingException {
+      return stockServiceimpl.getRecordsBySymbolAndDate(num, day);
+  }
+
+  @CrossOrigin
+  @GetMapping("/redisdata")
+  public List<TstocksPriceEntity> getDayPrice(@RequestParam (value = "number") String num) throws JsonProcessingException {
+      return stockServiceimpl.getRedisData(num);
+  }
+
+  @CrossOrigin
+  @GetMapping("/StockChartDtoredisdata")
+  public List<StockChartDTO> getDto(@RequestParam (value = "symbols") String sym) throws JsonProcessingException {
+      return stockServiceimpl.getStockChartDTORedis(sym);
+  }
+
+  @GetMapping("/StockListDto") 
+  public List<StockChartDTO> getLast5Entity(@RequestParam (value = "symbols") String sym, @RequestParam (value = "time") LocalDate data) throws JsonProcessingException {
+      return stockServiceimpl.getStockChartDTO(sym, data);
+  }
+  
+
+
+}
+
+
